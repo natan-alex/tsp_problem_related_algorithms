@@ -3,5 +3,7 @@ public class Main {
         var infos = InputParser.parse("input.txt");
         System.out.println(infos.getNumberOfCities());
         System.out.println(infos.getAllCoordinates());
+        var distanceMatrix = new DistancesMatrix(infos.getAllCoordinates());
+        distanceMatrix.show();
     }
 }
