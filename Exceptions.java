@@ -16,10 +16,4 @@ public class Exceptions {
             throw new IllegalArgumentException("The " + itemName + " must be greather than 0");
         }
     }
-
-    public static void throwIfNotEqual(int first, int second, String firstItemName, String secondItemName) {
-        if (first != second) {
-            throw new IllegalArgumentException("The " + firstItemName + " must be equal to " + secondItemName);
-        }
-    }
 }
