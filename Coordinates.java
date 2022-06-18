@@ -1,4 +1,3 @@
-import java.util.Objects;
 import java.util.regex.Pattern;
 public class Coordinates {
     private final int x;
@@ -29,17 +28,6 @@ public class Coordinates {
 
         this.x = Integer.parseInt(splited[0].trim());
         this.y = Integer.parseInt(splited[1].trim());
-    }
-
-    public double calculateDistanceTo(Coordinates coordinates) {
-        Objects.requireNonNull(coordinates);
-
-        var xDifference = x - coordinates.getX();
-        var yDifference = y - coordinates.getY();
-        var xSquared = xDifference * xDifference;
-        var ySquared = yDifference * yDifference;
-
-        return Math.sqrt(xSquared + ySquared);
     }
     
     @Override

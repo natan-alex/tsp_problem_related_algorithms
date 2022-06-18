@@ -14,15 +14,11 @@ public class InputParser {
 
             var line = reader.readLine();
             var coordinates = new ArrayList<Coordinates>(numberOfCities);
-            var count = 0;
 
-            while (count <= numberOfCities && line != null) {
+            while (line != null) {
                 coordinates.add(new Coordinates(line));
-                count++;
                 line = reader.readLine();
             }
-
-            Exceptions.throwIfNotEqual(count, numberOfCities, "number of cities", "number of coordinates");
 
             return new InputInfos(numberOfCities, coordinates);
         }
