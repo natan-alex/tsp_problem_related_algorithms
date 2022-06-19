@@ -1,10 +1,10 @@
 import java.util.List;
 import java.util.Objects;
 
-public class DistancesMatrix {
+public class DistanceMatrix {
     private final int[][] matrix;
 
-    public DistancesMatrix(List<Coordinates> coordinates) {
+    public DistanceMatrix(List<Coordinates> coordinates) {
         Objects.requireNonNull(coordinates); 
         var coordinatesSize = coordinates.size();
 
@@ -25,6 +25,10 @@ public class DistancesMatrix {
                 }
             }
         }
+    }
+
+    public int[][] getMatrix() {
+        return matrix;
     }
 
     public void show() {

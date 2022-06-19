@@ -1,9 +1,16 @@
 public class Main {
     public static void main(String[] args) throws Exception {
         var infos = InputParser.parse("input.txt");
-        System.out.println(infos.getNumberOfCities());
-        System.out.println(infos.getAllCoordinates());
-        var distanceMatrix = new DistancesMatrix(infos.getAllCoordinates());
+        var distanceMatrix = new DistanceMatrix(infos.getAllCoordinates());
         distanceMatrix.show();
+
+        var matrix = distanceMatrix.getMatrix();
+        var dynamicProgrammingApproach = new DynamicProgrammingApproach(matrix);
+
+        var tour = dynamicProgrammingApproach.getTour();
+        var tourCost = dynamicProgrammingApproach.getTourCost();
+
+        System.out.println("minimum tour: " + tour);
+        System.out.println("minimum tour cost: " + tourCost);
     }
 }

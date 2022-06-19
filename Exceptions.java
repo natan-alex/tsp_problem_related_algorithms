@@ -11,6 +11,18 @@ public class Exceptions {
         }
     }
 
+    public static void throwIfGreatherThan(int num, int limit, String itemName) {
+        if (num > limit) {
+            throw new IllegalArgumentException("The " + itemName + " cannot be greather than " + limit);
+        }
+    }
+
+    public static void throwIfGreatherThanOrEqual(int num, int limit, String itemName) {
+        if (num >= limit) {
+            throw new IllegalArgumentException("The " + itemName + " cannot be greather than or equal to " + limit);
+        }
+    }
+
     public static void throwIfNegativeOrEqualTo0(int num, String itemName) {
         if (num <= 0) {
             throw new IllegalArgumentException("The " + itemName + " must be greather than 0");
