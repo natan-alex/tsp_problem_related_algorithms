@@ -1,15 +1,22 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 public class Main {
     public static void main(String[] args) throws Exception {
         var infos = InputParser.parse("input.txt");
-        //System.out.println(infos.getNumberOfCities());
-        //System.out.println(infos.getAllCoordinates());
-        List<Coordinates> coordenadas = infos.getAllCoordinates();
-        TSPBruteForce teste= new TSPBruteForce(infos.getNumberOfCities(), coordenadas);
-        teste.start(coordenadas, infos.getNumberOfCities());
-        
+        var coordinates = infos.getAllCoordinates();
+
+        var distanceMatrix = new DistanceMatrix(coordinates);
+        distanceMatrix.show();
+
+        var matrix = distanceMatrix.getMatrix();
+
+        var bruteForceApproach = new TSPBruteForce(infos.getNumberOfCities(), infos.getAllCoordinates());
+        var dynamicProgrammingApproach = new DynamicProgrammingApproach(matrix);
+
+        bruteForceApproach.start(coordinates, infos.getNumberOfCities());
+
+        var tour = dynamicProgrammingApproach.getTour();
+        var tourCost = dynamicProgrammingApproach.getTourCost();
+
+        System.out.println("minimum tour: " + tour);
+        System.out.println("minimum tour cost: " + tourCost);
     }
 }
