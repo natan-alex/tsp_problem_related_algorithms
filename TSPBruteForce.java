@@ -1,11 +1,13 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.Arrays;
 import java.util.List;
 
 public class TSPBruteForce {
     private int cidades;
     private List<Coordinates> coordenadas;
     private int[] cidadesVisitadas;;
+    private int custoMinimo;
 
     public TSPBruteForce(
             int cidades,
@@ -54,33 +56,34 @@ public class TSPBruteForce {
         return minimo;
     }
 
-    public void escreverArquivo(int minimo) {
-        try {
-            var writer = new BufferedWriter(new FileWriter("output.txt"));
-            for (int i = 0; i < cidadesVisitadas.length; i++) {
-                writer.write(Integer.toString(cidadesVisitadas[i]));
-                writer.newLine();
-                writer.write(Integer.toString(minimo));
-            }
-            writer.close();
+    public void escreverArquivo(String nomeDoArquivo) {
+        Exceptions.throwIfNullOrEmpty(nomeDoArquivo, "nome do arquivo");
+
+        try (var writer = new BufferedWriter(new FileWriter(nomeDoArquivo))) {
+            writer.write(Arrays.toString(cidadesVisitadas));
+            writer.newLine();
+            writer.write(Integer.toString(custoMinimo));
         } catch (Exception e) {
-            // TODO: handle exception
         }
     }
 
     public void start(List<Coordinates> coordenadas, int numCidades) {
-        cidadesVisitadas = new int[numCidades];
+        cidadesVisitadas = new int[numCidades + 1];
         cidadesVisitadas[0] = 1;
+        cidadesVisitadas[numCidades] = 1;
         int[][] grafoDecusto = grafoDistancia(coordenadas);
         boolean[] vetores = new boolean[coordenadas.size()];
         vetores[0] = true;
-        int minimo = Integer.MAX_VALUE;
-        minimo = travelingSailman(grafoDecusto, vetores, 0, cidades, 1, 0, minimo);
-        System.out.print("Rota: ");
-        for (int i = 0; i < numCidades; i++)
-            System.out.print(cidadesVisitadas[i] + "=>");
-        System.out.println("1");
-        System.out.println("O menor peso é: " + minimo);
-        escreverArquivo(minimo);
+        custoMinimo = Integer.MAX_VALUE;
+        custoMinimo = travelingSailman(grafoDecusto, vetores, 0, cidades, 1, 0, custoMinimo);
     }
+
+    public int getCustoMinimo() {
+        return custoMinimo;
+    }
+
+    public int[] getCidadesVisitadas() {
+        return cidadesVisitadas;
+    }
+
 }

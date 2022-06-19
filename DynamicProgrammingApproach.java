@@ -1,4 +1,7 @@
 import java.util.Objects;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -161,7 +164,7 @@ public class DynamicProgrammingApproach {
         var lastIndex = startingNodeIndex;
         var state = endState;
 
-        tour.add(startingNodeIndex);
+        tour.add(startingNodeIndex + 1);
 
         for (int i = 1; i < N; i++) {
             var bestDistance = Integer.MAX_VALUE;
@@ -180,13 +183,25 @@ public class DynamicProgrammingApproach {
                 }
             }
 
-            tour.add(bestDistanceIndex);
+            tour.add(bestDistanceIndex + 1);
 
             state = state ^ (1 << bestDistanceIndex);
             lastIndex = bestDistanceIndex;
         }
 
-        tour.add(startingNodeIndex);
+        tour.add(startingNodeIndex + 1);
         Collections.reverse(tour);
+    }
+
+    public void tryStoreInfosInFile(String fileName) {
+        Exceptions.throwIfNullOrEmpty(fileName, "file name");
+
+        try (var writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(tour.toString());
+            writer.newLine();
+            writer.write(Integer.toString(minimumTourCost));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
