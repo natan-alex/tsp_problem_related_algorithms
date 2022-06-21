@@ -1,27 +1,23 @@
-import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        var infos = InputParser.parse("input.txt");
+        var infos = InputParser.parse("input1.txt");
 
         var coordinates = infos.getAllCoordinates();
-        var numberOfCities = infos.getNumberOfCities();
 
         var distanceMatrix = new DistanceMatrix(coordinates);
         distanceMatrix.show();
 
         var matrix = distanceMatrix.getMatrix();
 
-        var bruteForceApproach = new TSPBruteForce(numberOfCities, coordinates);
+        var bruteForceApproach = new TSPBruteForce(matrix);
         var dynamicProgrammingApproach = new DynamicProgrammingApproach(matrix);
 
-        bruteForceApproach.start(coordinates, numberOfCities);
-
-        var bruteForceTour = bruteForceApproach.getCidadesVisitadas();
+        var bruteForceTour = bruteForceApproach.getShortestPath();
         var bruteForceMinimumCost = bruteForceApproach.getCustoMinimo();
 
         System.out.println("From BRUTE FORCE APPROACH:");
-        System.out.println("\ttour: " + Arrays.toString(bruteForceTour));
+        System.out.println("\ttour: " + bruteForceTour.toString());
         System.out.println("\ttour cost: " + bruteForceMinimumCost);
 
         var dynamicProgrammingTour = dynamicProgrammingApproach.getTour();
@@ -31,7 +27,7 @@ public class Main {
         System.out.println("\ttour: " + dynamicProgrammingTour);
         System.out.println("\ttour cost: " + dynamicProgramminTourCost);
 
-        bruteForceApproach.escreverArquivo("bruteForceOutput.txt");
-        dynamicProgrammingApproach.tryStoreInfosInFile("dynamicProgrammingOutput.txt");
+        bruteForceApproach.escreverArquivo("testBF.txt");
+        dynamicProgrammingApproach.tryStoreInfosInFile("testDP.txt");
     }
 }

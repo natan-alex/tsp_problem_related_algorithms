@@ -1,89 +1,99 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TSPBruteForce {
     private int cidades;
-    private List<Coordinates> coordenadas;
-    private int[] cidadesVisitadas;;
-    private int custoMinimo;
+    private int [][] grafoDeDistancia; 
+    private boolean[] visitados; 
+    private int custoMinimo; 
+    private Vertices ultimaCidade; 
+    
 
-    public TSPBruteForce(
-            int cidades,
-            List<Coordinates> coordenadas) {
-        this.cidades = cidades;
-        this.coordenadas = coordenadas;
+    TSPBruteForce(int[][] grafo)
+    {
+        this.cidades = grafo.length;
+        this.grafoDeDistancia = grafo;
+        this.visitados = new boolean[cidades];
+        this.custoMinimo = Integer.MAX_VALUE;
+        this.ultimaCidade = null;
+
+        // Mark first vertex as visited since we use it as the root
+        visitados[0] = true;
     }
 
-    public int[][] grafoDistancia(List<Coordinates> coordenadas) {
-        int[][] distancias = new int[coordenadas.size()][coordenadas.size()];
-        for (int i = 0; i < coordenadas.size(); i++) {
-            for (int j = 0; j < coordenadas.size(); j++) {
-                var coordinadasI = coordenadas.get(i);
-                var coordinadasJ = coordenadas.get(j);
-                distancias[i][j] = (int) Math.round(coordinadasJ.calculateDistanceTo(coordinadasI));
-            }
-        }
-        return distancias;
+    int getCustoMinimo() {
+        backTracking(new Vertices(0,null,0),  1);
+        return custoMinimo;
     }
 
-    public int travelingSailman(
-            int[][] grafo,
-            boolean[] vetores,
-            int comecoFim,
-            int cidades,
-            int contador,
-            int custo,
-            int minimo) {
+    private void backTracking(Vertices cidadeAtual, int cidadesVisitadas)
+    {
+        // If last vertex is reached and it has a link to the root vertex then
+        // keep the minimum value out of the total cost
+        // of traversal and "ans"
+        // Returning to check for more possible values
+        if (cidadesVisitadas == cidades && grafoDeDistancia[cidadeAtual.getId()][0] > 0)
+        {
+            if (custoMinimo <= cidadeAtual.getCustoDistancia() + grafoDeDistancia[cidadeAtual.getId()][0])
+                return;
 
-        if (contador == cidades && grafo[comecoFim][0] > 0) {
-            minimo = Math.min(minimo, custo + grafo[comecoFim][0]);
-            cidadesVisitadas[contador - 1] = contador;
-            return minimo;
-        }
-        for (int i = 0; i < cidades; i++) {
-            if (vetores[i] == false && grafo[comecoFim][i] > 0) {
-                vetores[i] = true;
-                if (i != 0) {
-                    cidadesVisitadas[i] = comecoFim;
-                }
-                minimo = travelingSailman(grafo, vetores, i, cidades, contador + 1, custo + grafo[comecoFim][i],
-                        minimo);
-                vetores[i] = false;
+                // Better path found
+            else
+            {
+                custoMinimo = cidadeAtual.getCustoDistancia() + grafoDeDistancia[cidadeAtual.getId()][0];
+                ultimaCidade = cidadeAtual;
+                return;
             }
         }
-        return minimo;
+
+        // Loop to traverse the adjacency list of the current vertex and increasing the visited vertices
+        // by 1, moving to the next vertex and increasing the new vertex cost by graph[currentVertex,i] value
+        for (int i = 0; i < cidades; i++)
+        {
+            if (!visitados[i] && grafoDeDistancia[cidadeAtual.getId()][i] > 0)
+            {
+                // Mark as visited
+                visitados[i] = true;
+
+                Vertices nextVertex =  new Vertices(i, cidadeAtual, cidadeAtual.getCustoDistancia() + grafoDeDistancia[cidadeAtual.getId()][i]);
+                backTracking(nextVertex, cidadesVisitadas + 1);
+
+                // Mark ith node as unvisited after the recursion return
+                visitados[i] = false;
+            }
+        }
+    }
+
+
+    List<Integer> getShortestPath() {
+
+        List<Integer> shortestPath = new ArrayList<>();
+        shortestPath.add(1);
+
+        Vertices cidadeAtual  = ultimaCidade;
+
+        while(cidadeAtual != null)
+        {
+            shortestPath.add(cidadeAtual.getId()+1);
+            cidadeAtual = cidadeAtual.getPrev();
+        }
+
+        return shortestPath;
     }
 
     public void escreverArquivo(String nomeDoArquivo) {
         Exceptions.throwIfNullOrEmpty(nomeDoArquivo, "nome do arquivo");
 
         try (var writer = new BufferedWriter(new FileWriter(nomeDoArquivo))) {
-            writer.write(Arrays.toString(cidadesVisitadas));
+            writer.write(getShortestPath().toString());
             writer.newLine();
             writer.write(Integer.toString(custoMinimo));
         } catch (Exception e) {
         }
     }
 
-    public void start(List<Coordinates> coordenadas, int numCidades) {
-        cidadesVisitadas = new int[numCidades + 1];
-        cidadesVisitadas[0] = 1;
-        cidadesVisitadas[numCidades] = 1;
-        int[][] grafoDecusto = grafoDistancia(coordenadas);
-        boolean[] vetores = new boolean[coordenadas.size()];
-        vetores[0] = true;
-        custoMinimo = Integer.MAX_VALUE;
-        custoMinimo = travelingSailman(grafoDecusto, vetores, 0, cidades, 1, 0, custoMinimo);
-    }
 
-    public int getCustoMinimo() {
-        return custoMinimo;
-    }
-
-    public int[] getCidadesVisitadas() {
-        return cidadesVisitadas;
-    }
 
 }
