@@ -1,3 +1,5 @@
+package heuristics;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -85,7 +87,7 @@ public class GraphOperations {
     }
 
     private boolean hasCycleRecursive(
-        Map<Integer, List<Integer>> adjacencyList,
+            Map<Integer, List<Integer>> adjacencyList,
             int sourceNodeIndex,
             boolean[] visited,
             int parent) {
@@ -119,7 +121,7 @@ public class GraphOperations {
         }
 
         for (int i = 0; i < adjacencyList.size(); i++) {
-            if (visited[i]) { 
+            if (visited[i]) {
                 continue;
             }
 

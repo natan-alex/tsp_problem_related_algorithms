@@ -1,6 +1,11 @@
+package main;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+
+import common.Coordinates;
+import common.Exceptions;
 
 public class InputParser {
 

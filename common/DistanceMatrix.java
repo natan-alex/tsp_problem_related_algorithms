@@ -1,3 +1,5 @@
+package common;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -5,7 +7,7 @@ public class DistanceMatrix {
     private final int[][] matrix;
 
     public DistanceMatrix(List<Coordinates> coordinates) {
-        Objects.requireNonNull(coordinates); 
+        Objects.requireNonNull(coordinates);
         var coordinatesSize = coordinates.size();
 
         matrix = new int[coordinatesSize][coordinatesSize];
@@ -20,7 +22,7 @@ public class DistanceMatrix {
                 } else {
                     var coordinatesI = coordinates.get(i);
                     var coordinatesJ = coordinates.get(j);
- 
+
                     matrix[i][j] = (int) Math.round(coordinatesI.calculateDistanceTo(coordinatesJ));
                 }
             }
