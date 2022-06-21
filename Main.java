@@ -33,5 +33,9 @@ public class Main {
 
         bruteForceApproach.escreverArquivo("bruteForceOutput.txt");
         dynamicProgrammingApproach.tryStoreInfosInFile("dynamicProgrammingOutput.txt");
+
+        var graphOperations = new GraphOperations(distanceMatrix.getMatrix());
+        var mstVerticeSet = graphOperations.getMSTVerticeSet();
+        System.out.println(Arrays.toString(mstVerticeSet));
     }
 }
