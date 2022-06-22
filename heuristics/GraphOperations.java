@@ -74,9 +74,6 @@ public class GraphOperations {
     public List<Integer> dfsSearch(List<Edge> edges) {
         var adjacencyList = buildAdjacencyListFrom(edges);
 
-        System.out.println(edges);
-        System.out.println(adjacencyList);
-
         return null;
     }
 }

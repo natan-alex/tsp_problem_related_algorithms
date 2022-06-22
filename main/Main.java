@@ -39,7 +39,8 @@ public class Main {
         // dynamicProgrammingApproach.tryStoreInfosInFile("dynamicProgrammingOutput.txt");
 
         var graphOperations = new GraphOperations(matrix);
-        var mstVerticeSet = graphOperations.getMSTEdgeSet();
-        System.out.println(graphOperations.dfsSearch(mstVerticeSet));
+        var mstEdgeSet = graphOperations.getMSTEdgeSet();
+        System.out.println(mstEdgeSet);
+        graphOperations.dfsSearch(mstEdgeSet);
     }
 }
