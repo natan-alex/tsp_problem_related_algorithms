@@ -1,7 +1,5 @@
 package main;
 
-import java.util.Arrays;
-
 import bruteForceApproach.TSPBruteForce;
 import common.DistanceMatrix;
 import dynamicProgrammingApproach.DynamicProgrammingApproach;
@@ -14,6 +12,8 @@ public class Main {
         var coordinates = infos.getAllCoordinates();
 
         var distanceMatrix = new DistanceMatrix(coordinates);
+
+        System.out.println("DISTANCE MATRIX:");
         distanceMatrix.show();
 
         var matrix = distanceMatrix.getMatrix();
@@ -24,14 +24,14 @@ public class Main {
         var bruteForceMinimumCost = bruteForceApproach.getCustoMinimo();
         var bruteForceTour = bruteForceApproach.getShortestPath();
 
-        System.out.println("From BRUTE FORCE APPROACH:");
+        System.out.println("\nFrom BRUTE FORCE APPROACH:");
         System.out.println("\ttour: " + bruteForceTour);
         System.out.println("\ttour cost: " + bruteForceMinimumCost);
 
         var dynamicProgrammingTour = dynamicProgrammingApproach.getTour();
         var dynamicProgramminTourCost = dynamicProgrammingApproach.getTourCost();
 
-        System.out.println("From DYNAMIC PROGRAMMING APPROACH:");
+        System.out.println("\nFrom DYNAMIC PROGRAMMING APPROACH:");
         System.out.println("\ttour: " + dynamicProgrammingTour);
         System.out.println("\ttour cost: " + dynamicProgramminTourCost);
 
@@ -39,7 +39,7 @@ public class Main {
         // dynamicProgrammingApproach.tryStoreInfosInFile("dynamicProgrammingOutput.txt");
 
         var graphOperations = new GraphOperations(matrix);
-        var mstVerticeSet = graphOperations.getMSTVerticeSet();
-        System.out.println(Arrays.toString(mstVerticeSet));
+        var mstVerticeSet = graphOperations.getMSTEdgeSet();
+        System.out.println(graphOperations.dfsSearch(mstVerticeSet));
     }
 }

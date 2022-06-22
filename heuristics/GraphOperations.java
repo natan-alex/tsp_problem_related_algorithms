@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class GraphOperations {
-    private final List<Edge> edges;
+    private final Edge[] edges;
     private final int numberOfVertices;
 
     public GraphOperations(int[][] distanceMatrix) {
@@ -20,16 +20,18 @@ public class GraphOperations {
         }
 
         this.numberOfVertices = distanceMatrix.length;
-        this.edges = new ArrayList<>(distanceMatrix.length);
+        this.edges = new Edge[distanceMatrix.length * distanceMatrix.length - distanceMatrix.length];
 
         initEdges(distanceMatrix);
     }
 
     private void initEdges(int[][] distanceMatrix) {
+        int edgeIndex = 0;
+
         for (int i = 0; i < distanceMatrix.length; i++) {
             for (int j = 0; j < distanceMatrix.length; j++) {
                 if (i != j) {
-                    edges.add(new Edge(distanceMatrix[i][j], i, j));
+                    edges[edgeIndex++] = new Edge(distanceMatrix[i][j], i, j);
                 }
             }
         }
@@ -39,97 +41,42 @@ public class GraphOperations {
         var adjacencyList = new LinkedHashMap<Integer, List<Integer>>();
 
         for (var edge : edges) {
-            adjacencyList.putIfAbsent(edge.sourceNodeIndex, new ArrayList<Integer>());
-            adjacencyList.get(edge.sourceNodeIndex).add(edge.destinationNodeIndex);
+            adjacencyList.putIfAbsent(edge.getSourceNode(), new ArrayList<>());
+            adjacencyList.putIfAbsent(edge.getDestinationNode(), new ArrayList<>());
+            adjacencyList.get(edge.getSourceNode()).add(edge.getDestinationNode());
         }
 
         return adjacencyList;
     }
 
-    private static class Edge {
-        public final int weight;
-        public final int sourceNodeIndex;
-        public final int destinationNodeIndex;
+    public List<Edge> getMSTEdgeSet() {
+        Arrays.sort(edges, Comparator.comparing(e -> e.getWeight()));
 
-        public Edge(int weight, int sourceNodeIndex, int destinationNodeIndex) {
-            this.weight = weight;
-            this.sourceNodeIndex = sourceNodeIndex;
-            this.destinationNodeIndex = destinationNodeIndex;
-        }
-
-        @Override
-        public String toString() {
-            return "[" + sourceNodeIndex + "][" + destinationNodeIndex + "] -> " + weight;
-        }
-    }
-
-    public int[] getMSTVerticeSet() {
         var mstSet = new ArrayList<Edge>();
         var nextEdgeIndex = 0;
-        var edgesCount = 0;
 
-        edges.sort(Comparator.comparing(e -> e.weight));
-
-        while (edgesCount <= numberOfVertices - 1) {
-            mstSet.add(edges.get(nextEdgeIndex));
+        while (mstSet.size() < numberOfVertices - 1) {
+            mstSet.add(edges[nextEdgeIndex]);
 
             var adjacencyList = buildAdjacencyListFrom(mstSet);
+            var cycleVerifier = new CycleVerifier(adjacencyList);
 
-            if (hasCycle(adjacencyList)) {
-                mstSet.remove(mstSet.size() - 1);
+            if (cycleVerifier.hasCycle()) {
+                mstSet.remove(edges[nextEdgeIndex]);
             }
 
             nextEdgeIndex++;
-            edgesCount++;
         }
 
-        return mstSet.stream().mapToInt(e -> e.sourceNodeIndex).toArray();
+        return mstSet;
     }
 
-    private boolean hasCycleRecursive(
-            Map<Integer, List<Integer>> adjacencyList,
-            int sourceNodeIndex,
-            boolean[] visited,
-            int parent) {
+    public List<Integer> dfsSearch(List<Edge> edges) {
+        var adjacencyList = buildAdjacencyListFrom(edges);
 
-        visited[sourceNodeIndex] = true;
+        System.out.println(edges);
+        System.out.println(adjacencyList);
 
-        var children = adjacencyList.get(sourceNodeIndex);
-
-        if (children == null) {
-            return false;
-        }
-
-        for (var c : children) {
-            if (c < visited.length && !visited[c]) {
-                if (hasCycleRecursive(adjacencyList, c, visited, sourceNodeIndex)) {
-                    return true;
-                }
-            } else if (c != parent) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private boolean hasCycle(Map<Integer, List<Integer>> adjacencyList) {
-        boolean[] visited = new boolean[adjacencyList.size()];
-
-        for (int i = 0; i < adjacencyList.size(); i++) {
-            visited[i] = false;
-        }
-
-        for (int i = 0; i < adjacencyList.size(); i++) {
-            if (visited[i]) {
-                continue;
-            }
-
-            if (hasCycleRecursive(adjacencyList, i, visited, -1)) {
-                return true;
-            }
-        }
-
-        return false;
+        return null;
     }
 }
