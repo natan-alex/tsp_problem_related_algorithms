@@ -3,20 +3,17 @@ package main;
 import bruteForceApproach.TSPBruteForce;
 import common.DistanceMatrix;
 import dynamicProgrammingApproach.DynamicProgrammingApproach;
-import heuristics.GraphOperations;
+import heuristics.TSPHeuristic;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         var infos = InputParser.parse("input1.txt");
-
         var coordinates = infos.getAllCoordinates();
-
         var distanceMatrix = new DistanceMatrix(coordinates);
+        var matrix = distanceMatrix.getMatrix();
 
         System.out.println("DISTANCE MATRIX:");
         distanceMatrix.show();
-
-        var matrix = distanceMatrix.getMatrix();
 
         var bruteForceApproach = new TSPBruteForce(matrix);
         var dynamicProgrammingApproach = new DynamicProgrammingApproach(matrix);
@@ -35,12 +32,16 @@ public class Main {
         System.out.println("\ttour: " + dynamicProgrammingTour);
         System.out.println("\ttour cost: " + dynamicProgramminTourCost);
 
-        // bruteForceApproach.escreverArquivo("bruteForceOutput.txt");
-        // dynamicProgrammingApproach.tryStoreInfosInFile("dynamicProgrammingOutput.txt");
+        var heuristic = new TSPHeuristic(matrix);
+        var heuristicPathApproximation = heuristic.getPathApproximation();
+        var heuristicPathApproximationCost = heuristic.getPathApproximationCost();
 
-        var graphOperations = new GraphOperations(matrix);
-        var mstEdgeSet = graphOperations.getMSTEdgeSet();
-        System.out.println(mstEdgeSet);
-        graphOperations.dfsSearch(mstEdgeSet);
+        System.out.println("\nFrom HEURISTICS:");
+        System.out.println("\ttour: " + heuristicPathApproximation);
+        System.out.println("\ttour cost: " + heuristicPathApproximationCost);
+
+        bruteForceApproach.escreverArquivo("bruteForceOutput.txt");
+        dynamicProgrammingApproach.tryStoreInfosInFile("dynamicProgrammingOutput.txt");
+        heuristic.tryStoreInfosInFile("heuristicOutput.txt");
     }
 }
