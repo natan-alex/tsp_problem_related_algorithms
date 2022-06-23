@@ -1,18 +1,20 @@
+package bruteForceApproach;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.Exceptions;
+
 public class TSPBruteForce {
     private int cidades;
-    private int [][] grafoDeDistancia; 
-    private boolean[] visitados; 
-    private int custoMinimo; 
-    private Vertices ultimaCidade; 
-    
+    private int[][] grafoDeDistancia;
+    private boolean[] visitados;
+    private int custoMinimo;
+    private Vertices ultimaCidade;
 
-    TSPBruteForce(int[][] grafo)
-    {
+    public TSPBruteForce(int[][] grafo) {
         this.cidades = grafo.length;
         this.grafoDeDistancia = grafo;
         this.visitados = new boolean[cidades];
@@ -23,41 +25,39 @@ public class TSPBruteForce {
         visitados[0] = true;
     }
 
-    int getCustoMinimo() {
-        backTracking(new Vertices(0,null,0),  1);
+    public int getCustoMinimo() {
+        backTracking(new Vertices(0, null, 0), 1);
         return custoMinimo;
     }
 
-    private void backTracking(Vertices cidadeAtual, int cidadesVisitadas)
-    {
+    private void backTracking(Vertices cidadeAtual, int cidadesVisitadas) {
         // If last vertex is reached and it has a link to the root vertex then
         // keep the minimum value out of the total cost
         // of traversal and "ans"
         // Returning to check for more possible values
-        if (cidadesVisitadas == cidades && grafoDeDistancia[cidadeAtual.getId()][0] > 0)
-        {
+        if (cidadesVisitadas == cidades && grafoDeDistancia[cidadeAtual.getId()][0] > 0) {
             if (custoMinimo <= cidadeAtual.getCustoDistancia() + grafoDeDistancia[cidadeAtual.getId()][0])
                 return;
 
-                // Better path found
-            else
-            {
+            // Better path found
+            else {
                 custoMinimo = cidadeAtual.getCustoDistancia() + grafoDeDistancia[cidadeAtual.getId()][0];
                 ultimaCidade = cidadeAtual;
                 return;
             }
         }
 
-        // Loop to traverse the adjacency list of the current vertex and increasing the visited vertices
-        // by 1, moving to the next vertex and increasing the new vertex cost by graph[currentVertex,i] value
-        for (int i = 0; i < cidades; i++)
-        {
-            if (!visitados[i] && grafoDeDistancia[cidadeAtual.getId()][i] > 0)
-            {
+        // Loop to traverse the adjacency list of the current vertex and increasing the
+        // visited vertices
+        // by 1, moving to the next vertex and increasing the new vertex cost by
+        // graph[currentVertex,i] value
+        for (int i = 0; i < cidades; i++) {
+            if (!visitados[i] && grafoDeDistancia[cidadeAtual.getId()][i] > 0) {
                 // Mark as visited
                 visitados[i] = true;
 
-                Vertices nextVertex =  new Vertices(i, cidadeAtual, cidadeAtual.getCustoDistancia() + grafoDeDistancia[cidadeAtual.getId()][i]);
+                Vertices nextVertex = new Vertices(i, cidadeAtual,
+                        cidadeAtual.getCustoDistancia() + grafoDeDistancia[cidadeAtual.getId()][i]);
                 backTracking(nextVertex, cidadesVisitadas + 1);
 
                 // Mark ith node as unvisited after the recursion return
@@ -66,17 +66,15 @@ public class TSPBruteForce {
         }
     }
 
-
-    List<Integer> getShortestPath() {
+    public List<Integer> getShortestPath() {
 
         List<Integer> shortestPath = new ArrayList<>();
         shortestPath.add(1);
 
-        Vertices cidadeAtual  = ultimaCidade;
+        Vertices cidadeAtual = ultimaCidade;
 
-        while(cidadeAtual != null)
-        {
-            shortestPath.add(cidadeAtual.getId()+1);
+        while (cidadeAtual != null) {
+            shortestPath.add(cidadeAtual.getId() + 1);
             cidadeAtual = cidadeAtual.getPrev();
         }
 
@@ -93,7 +91,5 @@ public class TSPBruteForce {
         } catch (Exception e) {
         }
     }
-
-
 
 }

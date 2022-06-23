@@ -1,5 +1,10 @@
+package main;
+
 import java.util.List;
 import java.util.Objects;
+
+import common.Coordinates;
+import common.Exceptions;
 
 public class InputInfos {
     private final List<Coordinates> coordinates;

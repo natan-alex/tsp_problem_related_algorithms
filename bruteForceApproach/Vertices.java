@@ -1,7 +1,9 @@
+package bruteForceApproach;
+
 public class Vertices {
-    private int id; 
-    private int custoDistancia; 
-    private Vertices prev; 
+    private int id;
+    private int custoDistancia;
+    private Vertices prev;
 
     Vertices(int id, Vertices prev, int custoDistancia) {
         this.id = id;

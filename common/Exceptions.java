@@ -1,3 +1,5 @@
+package common;
+
 public class Exceptions {
     public static void throwIfNullOrEmpty(String s, String itemName) {
         if (s == null || s.isBlank()) {
