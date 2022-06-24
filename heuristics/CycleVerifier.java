@@ -16,6 +16,9 @@ public class CycleVerifier {
         initWereVisited();
     }
 
+    // O(n^2), dois loops aninhados
+    // percorre a lista de adjacência e os filhos de cada item da lista,
+    // que também são listas
     private void initWereVisited() {
         for (var entry : adjacencyList.entrySet()) {
             verticesAndIfWereVisited.putIfAbsent(entry.getKey(), false);
@@ -26,6 +29,9 @@ public class CycleVerifier {
         }
     }
 
+    // O(|V| + |E|), pois utiliza da busca em profundidade
+    // para verificar por ciclos e os filhos já visitados
+    // não são visitados denovo
     public boolean hasCycle() {
         for (var key : adjacencyList.keySet()) {
             if (!verticesAndIfWereVisited.get(key) && hasCycleRecursive(key, -1)) {
@@ -36,6 +42,9 @@ public class CycleVerifier {
         return false;
     }
 
+    // O(|V| + |E|), pois utiliza da busca em profundidade
+    // para verificar por ciclos e os filhos já visitados
+    // não são visitados denovo
     private boolean hasCycleRecursive(int sourceNode, int parentNode) {
         verticesAndIfWereVisited.put(sourceNode, true);
 

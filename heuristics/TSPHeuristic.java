@@ -33,6 +33,7 @@ public class TSPHeuristic {
         initEdges(distanceMatrix);
     }
 
+    // O(n^2), dois loops aninhados O(n)
     private void initEdges(int[][] distanceMatrix) {
         for (int i = 0; i < distanceMatrix.length; i++) {
             for (int j = 0; j < distanceMatrix.length; j++) {
@@ -43,6 +44,8 @@ public class TSPHeuristic {
         }
     }
 
+    // O(n), percorre a lista de arestas e insere se necessário na
+    // lista de adjacência
     private Map<Integer, List<Integer>> buildAdjacencyListFrom(List<Edge> edges) {
         var adjacencyList = new LinkedHashMap<Integer, List<Integer>>();
 
@@ -55,6 +58,11 @@ public class TSPHeuristic {
         return adjacencyList;
     }
 
+    // O(n^2) aproximadamente, isso pois faz n iterações
+    // dado que o número de vértices da árvore geradora mínima é
+    // n - 1 e constrói listas de adjacência (O(n)) a partir das
+    // arestas presentes no conjunto e verificar por ciclo nessa
+    // lista de adjacência (O(|V| + |E|))
     private List<Edge> getMSTEdgeSet() {
         edges.sort(Comparator.comparing(e -> e.getWeight()));
 
@@ -77,6 +85,9 @@ public class TSPHeuristic {
         return mstSet;
     }
 
+    // O(n^2) influenciado pela construção da árvore geradora
+    // mínima, com operações O(n) para construir
+    // a lista de adjacência e remover filhos vazios dessa lista
     private void fillPathApproximation() {
         var edges = getMSTEdgeSet();
         var adjacencyList = buildAdjacencyListFrom(edges);
@@ -94,6 +105,10 @@ public class TSPHeuristic {
         pathApproximation.add(pathApproximation.get(0));
     }
 
+    // O(n^2) no pior caso, que é caso tenha que encontrar o caminho
+    // O(n) no melhor pois acrescenta um a cada item do caminho
+    // encontrado pois as cidades começam em 1 e o caminho contém os índices
+    // dos itens
     public List<Integer> getPathApproximation() {
         if (pathApproximation == null) {
             fillPathApproximation();
@@ -105,6 +120,8 @@ public class TSPHeuristic {
                 .collect(Collectors.toList());
     }
 
+    // O(n), percorre o caminho aproximado gerado
+    // para calcular o custo
     private void fillPathApproximationCost() {
         var pathIterator = pathApproximation.iterator();
         var current = pathIterator.next();
@@ -118,6 +135,9 @@ public class TSPHeuristic {
         }
     }
 
+    // O(n^2) no pior caso que é caso tenha que encontrar
+    // o caminho
+    // O(1) no melhor caso que é caso o caminho já tenha sido gerado
     public int getPathApproximationCost() {
         if (pathApproximation == null) {
             fillPathApproximation();
@@ -130,6 +150,9 @@ public class TSPHeuristic {
         return cost;
     }
 
+    // O(n^2) no pior caso que é caso tenha que encontrar
+    // o caminho
+    // O(1) no melhor caso que é caso o caminho já tenha sido gerado
     public void tryStoreInfosInFile(String fileName) {
         Exceptions.throwIfNullOrEmpty(fileName, "fileName");
 
