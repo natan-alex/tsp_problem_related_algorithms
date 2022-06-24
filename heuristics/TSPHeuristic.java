@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 import common.Exceptions;
 
 public class TSPHeuristic {
-    private final Edge[] edges;
+    private final List<Edge> edges;
     private final int[][] distanceMatrix;
     private List<Integer> pathApproximation;
     private int cost;
@@ -27,7 +26,7 @@ public class TSPHeuristic {
             throw new IllegalArgumentException("Distance matrix must be squared");
         }
 
-        this.edges = new Edge[distanceMatrix.length * distanceMatrix.length - distanceMatrix.length];
+        this.edges = new ArrayList<>(distanceMatrix.length * distanceMatrix.length);
         this.pathApproximation = null;
         this.cost = Integer.MAX_VALUE;
 
@@ -35,12 +34,10 @@ public class TSPHeuristic {
     }
 
     private void initEdges(int[][] distanceMatrix) {
-        int edgeIndex = 0;
-
         for (int i = 0; i < distanceMatrix.length; i++) {
             for (int j = 0; j < distanceMatrix.length; j++) {
                 if (i != j) {
-                    edges[edgeIndex++] = new Edge(distanceMatrix[i][j], i, j);
+                    edges.add(new Edge(distanceMatrix[i][j], i, j));
                 }
             }
         }
@@ -59,13 +56,13 @@ public class TSPHeuristic {
     }
 
     private List<Edge> getMSTEdgeSet() {
-        Arrays.sort(edges, Comparator.comparing(e -> e.getWeight()));
+        edges.sort(Comparator.comparing(e -> e.getWeight()));
 
         var mstSet = new ArrayList<Edge>();
-        var nextEdgeIndex = 0;
+        var edgesIterator = edges.iterator();
 
         while (mstSet.size() < distanceMatrix.length - 1) {
-            var currentEdge = edges[nextEdgeIndex++];
+            var currentEdge = edgesIterator.next();
 
             mstSet.add(currentEdge);
 
