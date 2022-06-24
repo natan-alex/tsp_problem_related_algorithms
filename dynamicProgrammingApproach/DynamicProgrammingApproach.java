@@ -80,17 +80,21 @@ public class DynamicProgrammingApproach {
     }
 
     // O(n^5)
-    public void discoverMinimumTour() {
+    private void discoverMinimumTour() {
         if (wasMinimumTourAlreadyDiscovered) {
             return;
         }
 
+        // O(n)
         addOutgoingEdgesFromStartingNodeToMemoryTable();
 
+        // O(n^5)
         fillMemoryTableWithMinimumDistances();
 
+        // O(n)
         connectTourBackToStartingNodeAndSetMinimumCost();
 
+        // O(n^2)
         reconstructPathFromMemoryTableAndFillTour();
 
         wasMinimumTourAlreadyDiscovered = true;
