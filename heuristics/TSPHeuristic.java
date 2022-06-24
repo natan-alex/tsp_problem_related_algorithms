@@ -64,6 +64,7 @@ public class TSPHeuristic {
     // arestas presentes no conjunto e verificar por ciclo nessa
     // lista de adjacência (O(|V| + |E|))
     private List<Edge> getMSTEdgeSet() {
+        // O(n * log(n))
         edges.sort(Comparator.comparing(e -> e.getWeight()));
 
         var mstSet = new ArrayList<Edge>();
@@ -74,9 +75,10 @@ public class TSPHeuristic {
 
             mstSet.add(currentEdge);
 
-            var adjacencyList = buildAdjacencyListFrom(mstSet);
+            var adjacencyList = buildAdjacencyListFrom(mstSet); // O(n)
             var cycleVerifier = new CycleVerifier(adjacencyList);
 
+            // O(|V| + |E|)
             if (cycleVerifier.hasCycle()) {
                 mstSet.remove(currentEdge);
             }
@@ -89,13 +91,15 @@ public class TSPHeuristic {
     // mínima, com operações O(n) para construir
     // a lista de adjacência e remover filhos vazios dessa lista
     private void fillPathApproximation() {
-        var edges = getMSTEdgeSet();
-        var adjacencyList = buildAdjacencyListFrom(edges);
+        var edges = getMSTEdgeSet(); // O(n^2)
+        var adjacencyList = buildAdjacencyListFrom(edges); // O(n)
 
+        // O(n)
         adjacencyList = adjacencyList.entrySet().stream()
                 .filter(e -> !e.getValue().isEmpty())
                 .collect(Collectors.toMap(k -> k.getKey(), v -> v.getValue()));
 
+        // O(n)
         pathApproximation = new DFSSearch(adjacencyList)
                 .getPath()
                 .stream()
@@ -114,6 +118,7 @@ public class TSPHeuristic {
             fillPathApproximation();
         }
 
+        // O(n)
         return pathApproximation
                 .stream()
                 .map(i -> i + 1)
