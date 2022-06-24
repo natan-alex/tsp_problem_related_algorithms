@@ -21,6 +21,22 @@ public class DynamicProgrammingApproach {
     private int minimumTourCost;
     private boolean wasMinimumTourAlreadyDiscovered;
 
+    private static int twoPower(int n) {
+        return (int) Math.pow(2, n);
+    }
+
+    private static int bitwiseAnd(int first, int second) {
+        return first & second;
+    }
+
+    private static int bitwiseOr(int first, int second) {
+        return first | second;
+    }
+
+    private static int bitwiseXor(int first, int second) {
+        return first ^ second;
+    }
+
     public DynamicProgrammingApproach(int[][] distanceMatrix) {
         this.distanceMatrix = Objects.requireNonNull(distanceMatrix);
 
@@ -30,9 +46,9 @@ public class DynamicProgrammingApproach {
 
         this.N = distanceMatrix.length;
         this.startingNodeIndex = 0;
-        this.memoryTable = new int[N][1 << N];
+        this.memoryTable = new int[N][twoPower(N)];
         this.tour = new ArrayList<>();
-        this.endState = (1 << N) - 1;
+        this.endState = twoPower(N) - 1;
         this.minimumTourCost = Integer.MAX_VALUE;
         this.wasMinimumTourAlreadyDiscovered = false;
     }
@@ -70,20 +86,21 @@ public class DynamicProgrammingApproach {
     }
 
     private static boolean notIn(int element, int subset) {
-        return ((1 << element) & subset) == 0;
+        return bitwiseAnd(twoPower(element), subset) == 0;
     }
 
     private void addOutgoingEdgesFromStartingNodeToMemoryTable() {
         for (int end = 0; end < N; end++) {
             if (end != startingNodeIndex) {
-                memoryTable[end][(1 << startingNodeIndex) | (1 << end)] = distanceMatrix[startingNodeIndex][end];
+                var column = bitwiseOr(twoPower(startingNodeIndex), twoPower(end));
+                memoryTable[end][column] = distanceMatrix[startingNodeIndex][end];
             }
         }
     }
 
     private void fillMemoryTableWithMinimumDistances() {
         for (int r = 3; r <= N; r++) {
-            for (int subset : combinations(r, N)) {
+            for (int subset : getAllCombinations(r, N)) {
                 if (notIn(startingNodeIndex, subset)) {
                     continue;
                 }
@@ -93,7 +110,7 @@ public class DynamicProgrammingApproach {
                         continue;
                     }
 
-                    var subsetWithoutNext = subset ^ (1 << next);
+                    var subsetWithoutNext = bitwiseXor(subset, twoPower(next));
                     var minimumDistance = Integer.MAX_VALUE;
 
                     for (int end = 0; end < N; end++) {
@@ -114,39 +131,28 @@ public class DynamicProgrammingApproach {
         }
     }
 
-    // This method generates all bit sets of size n where r bits
-    // are set to one. The result is returned as a list of integer masks.
-    public static List<Integer> combinations(int r, int n) {
+    private static List<Integer> getAllCombinations(int r, int n) {
         var subsets = new ArrayList<Integer>();
-        combinations(0, 0, r, n, subsets);
+        getAllCombinationsRecursively(0, 0, r, n, subsets);
         return subsets;
     }
 
-    // To find all the combinations of size r we need to recurse until we have
-    // selected r elements (aka r = 0), otherwise if r != 0 then we still need to
-    // select
-    // an element which is found after the position of our last selected element
-    private static void combinations(int set, int at, int r, int n, List<Integer> subsets) {
-        // Return early if there are more elements left to select than what is
-        // available.
-        int elementsLeftToPick = n - at;
+    private static void getAllCombinationsRecursively(int set, int at, int r, int n, List<Integer> subsets) {
+        int elementsToPickInLeftSide = n - at;
 
-        if (elementsLeftToPick < r) {
+        if (elementsToPickInLeftSide < r) {
             return;
         }
 
-        // We selected 'r' elements so we found a valid subset!
         if (r == 0) {
             subsets.add(set);
         } else {
             for (int i = at; i < n; i++) {
-                // Try including this element
-                set ^= (1 << i);
+                set = bitwiseXor(set, twoPower(i));
 
-                combinations(set, i + 1, r - 1, n, subsets);
+                getAllCombinationsRecursively(set, i + 1, r - 1, n, subsets);
 
-                // Backtrack and try the instance where we did not include this element
-                set ^= (1 << i);
+                set = bitwiseXor(set, twoPower(i));
             }
         }
     }
@@ -190,7 +196,7 @@ public class DynamicProgrammingApproach {
 
             tour.add(bestDistanceIndex + 1);
 
-            state = state ^ (1 << bestDistanceIndex);
+            state = bitwiseXor(state, twoPower(bestDistanceIndex));
             lastIndex = bestDistanceIndex;
         }
 
