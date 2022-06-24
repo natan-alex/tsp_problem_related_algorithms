@@ -92,7 +92,6 @@ public class TSPHeuristic {
                 .getPath()
                 .stream()
                 .distinct()
-                .map(i -> i + 1)
                 .collect(Collectors.toList());
 
         pathApproximation.add(pathApproximation.get(0));
@@ -103,7 +102,10 @@ public class TSPHeuristic {
             fillPathApproximation();
         }
 
-        return pathApproximation;
+        return pathApproximation
+                .stream()
+                .map(i -> i + 1)
+                .collect(Collectors.toList());
     }
 
     private void fillPathApproximationCost() {
@@ -114,7 +116,7 @@ public class TSPHeuristic {
 
         while (pathIterator.hasNext()) {
             var next = pathIterator.next();
-            cost += distanceMatrix[current - 1][next - 1];
+            cost += distanceMatrix[current][next];
             current = next;
         }
     }
