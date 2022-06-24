@@ -31,9 +31,9 @@ public class DFSSearch {
         }
     }
 
-    // O(|V| + |E|), pois utiliza da busca em profundidade
-    // para verificar por ciclos e os filhos já visitados
-    // não são visitados denovo
+    // O(|V| + |E|), pois faz a busca em profundidade
+    // percorrendo os filhos dos filhos, entretanto os filhos
+    // já visitados não são visitados denovo
     public List<Integer> getPath() {
         for (var key : adjacencyList.keySet()) {
             if (!verticesAndIfWereVisited.get(key)) {
@@ -46,9 +46,9 @@ public class DFSSearch {
         return path;
     }
 
-    // O(|V| + |E|), pois utiliza da busca em profundidade
-    // para verificar por ciclos e os filhos já visitados
-    // não são visitados denovo
+    // O(|V| + |E|), pois faz a busca em profundidade
+    // percorrendo os filhos dos filhos, entretanto os filhos
+    // já visitados não são visitados denovo
     private void traverseRecursively(int currentNode, int parentNode) {
         verticesAndIfWereVisited.put(currentNode, true);
 

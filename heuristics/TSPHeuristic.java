@@ -99,7 +99,7 @@ public class TSPHeuristic {
                 .filter(e -> !e.getValue().isEmpty())
                 .collect(Collectors.toMap(k -> k.getKey(), v -> v.getValue()));
 
-        // O(n)
+        // O(|V| + |E|)
         pathApproximation = new DFSSearch(adjacencyList)
                 .getPath()
                 .stream()
