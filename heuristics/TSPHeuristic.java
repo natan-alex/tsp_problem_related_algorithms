@@ -85,7 +85,7 @@ public class TSPHeuristic {
                 .filter(e -> !e.getValue().isEmpty())
                 .collect(Collectors.toMap(k -> k.getKey(), v -> v.getValue()));
 
-        pathApproximation = new DFSearch(adjacencyList)
+        pathApproximation = new DFSSearch(adjacencyList)
                 .getPath()
                 .stream()
                 .distinct()

@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class DFSearch {
+public class DFSSearch {
     private final Map<Integer, List<Integer>> adjacencyList;
     private final Map<Integer, Boolean> verticesAndIfWereVisited;
     private final ArrayList<Integer> path;
 
-    public DFSearch(Map<Integer, List<Integer>> adjacencyList) {
+    public DFSSearch(Map<Integer, List<Integer>> adjacencyList) {
         this.adjacencyList = Objects.requireNonNull(adjacencyList);
         this.path = new ArrayList<Integer>();
         this.verticesAndIfWereVisited = new HashMap<>();
